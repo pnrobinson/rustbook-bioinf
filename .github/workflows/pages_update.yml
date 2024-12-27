@@ -1,0 +1,28 @@
+name: Rust-Buch bauen und auf GitHub Pages veröffentlichen
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install mdbook
+        run: cargo install mdbook --vers "^0.4.40" --no-default-features
+
+      - name: Build Book
+        run: mdbook build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: book

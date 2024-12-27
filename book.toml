@@ -1,0 +1,10 @@
+[book]
+title = "Einführung in Rust für Bioinformatiker"
+author = "Peter N Robinson"
+description = "Eine Einführung in Rust mit einigen praktischen Beispielen."
+language = "de"
+
+[output.html]
+additional-css = ["theme/ferris.css", "theme/2018-edition.css"]
+additional-js = ["theme/ferris.js"]
+git-repository-url = "https://github.com/pnrobinson/rustbook-bioinf"
