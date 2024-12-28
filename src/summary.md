@@ -11,4 +11,10 @@
     - [Installation](ch01-01-installation.md)
     - [Hallo Welt](ch01-02-hello-world.md)
     - [Klassen..?](ch01-03-klassen.md)
+    - [enums..?](ch01-04-enums.md)
+    - [Optional..?](ch01-05-option.md)
+    - [match](ch01-06-match.md)
+
+- [Anhang](appendix-00.md)
+    - [mdbook](appendix-01.md)  
  

@@ -1,5 +1,7 @@
 # VS Code
 
+Wir werden in diesem Praktikum VS Code verwenden.
+
 
 1. [Herunterladen und installieren](https://code.visualstudio.com/)
 2. Walkthroughs (Einführungen): get started with VS Code
