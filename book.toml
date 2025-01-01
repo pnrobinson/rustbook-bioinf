@@ -5,6 +5,7 @@ description = "Eine Einführung in Rust mit einigen praktischen Beispielen."
 language = "de"
 
 [output.html]
-additional-css = ["theme/ferris.css", "theme/2018-edition.css"]
+additional-css = ["theme/ferris.css", "theme/2018-edition.css", "theme/custom.css"]
 additional-js = ["theme/ferris.js"]
+mathjax-support = true
 git-repository-url = "https://github.com/pnrobinson/rustbook-bioinf"
