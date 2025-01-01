@@ -27,6 +27,8 @@
     - [Read-Benenunng](ch03-04-readnaming.md)
     - [FASTQ-Analyse mit Rust](ch03-05-rust.md)
     - [FasQC in Rust](ch03-06-fastqc.md)
+- [SAM/BAM](ch04-00-sam-bam.md)
+    - [SAM-Grundlagen](ch04-01-basics.md)
 
 - [Anhang](appendix-00.md)
     - [mdbook](appendix-01.md)  
