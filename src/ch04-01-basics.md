@@ -125,15 +125,13 @@ SAM file: Paired end  </figcaption>
 Grundlagen des SAM-Formats: PE-Sequenzen]{{\bf SAM-Format Grundlagen: PE-Sequenzen]} Beispiel für 
 Paired-End-Read-Mappings im SAM-Format {\bf (a)} und {\bf (b)} in IGV. Zwei Paare 
 bestehend aus vier Reads der Länge 10 werden auf eine Referenzsequenz der Länge 40 abgebildet. Beachten Sie, dass 
-Mitglieder desselben Paars haben denselben \texttt{QNAME} und werden auf verschiedene Stränge abgebildet. Read 1 wird dem 
+Mitglieder desselben Paars haben denselben <code>QNAME</code> und werden auf verschiedene Stränge abgebildet. Read 1 wird dem 
 dem Vorwärtsstrang an Position 2 zugeordnet und bildet ein Paar mit dem Read, der dem Rückwärtsstrang an Position 
-Strang an Position 27 zugeordnet ist. \texttt{RNEXT} wird auf \texttt{=} gesetzt, da der zweite Read des Paares 
-des Paares auf dieselbe Referenz, d. h. \texttt{chrE}, abgebildet wird, und \texttt{PNEXT} wird auf 27 gesetzt, weil der 
+Strang an Position 27 zugeordnet ist. <code>RNEXT</code> wird auf <code>=</code> gesetzt, da der zweite Read des Paares 
+des Paares auf dieselbe Referenz, d. h. <code>chrE</code>, abgebildet wird, und <code>PNEXT</code> wird auf 27 gesetzt, weil der 
 Reverse-Read auf diese Position abgebildet wird (der Reverse-Read ist an den Positionen 27-36 ausgerichtet). 
-Daher wird \texttt{TLEN} auf 35 gesetzt, denn dies ist der Abstand zwischen der äußersten linken und der äußersten rechten 
-der am weitesten rechts gelegenen Base der beiden Reads. Der Eintrag \texttt{TLEN} für den Reverse-Read wird mit 
+Daher wird <code>TLEN</code> auf 35 gesetzt, denn dies ist der Abstand zwischen der äußersten linken und der äußersten rechten 
+der am weitesten rechts gelegenen Base der beiden Reads. Der Eintrag <code>TLEN</code> für den Reverse-Read wird mit 
 einem Minuszeichen dargestellt.
 
-Für Paired-End-Reads werden andere bitweise Flags verwendet als für Single-End-Reads. Die Flags \texttt{99} und \texttt{147} zeigen an, dass beide Mitglieder des Paares korrekt auf den Vorwärts- und den Rückwärtsstrang gemappt wurden.}
-\label{fig:sam_igv_paired_end}
-\end{figure}
+Für Paired-End-Reads werden andere bitweise Flags verwendet als für Single-End-Reads. Die Flags <code>99</code> und <code>147</code> zeigen an, dass beide Mitglieder des Paares korrekt auf den Vorwärts- und den Rückwärtsstrang gemappt wurden.
