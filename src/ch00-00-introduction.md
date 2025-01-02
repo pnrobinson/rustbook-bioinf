@@ -8,5 +8,6 @@ Zeitplan (ungefähr)
 - Woche 2: Datenstrukturen in Rust: traits
 - Woche 3: Algorithmen in Rust
 - Woche 4 - Woche 8: Programmierübungen
+-- Arbeiten mit FASTQ Dateien in Rust
 -- Arbeiten mit BAM Dateien in Rust
--- ANNs selbstgestrickt
+-- ggf. andere Themen
