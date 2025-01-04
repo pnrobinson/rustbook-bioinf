@@ -1,5 +1,6 @@
 
 mod bubble;
+mod dna_struct;
 mod quick;
 
 use crate::quick::quicksort;

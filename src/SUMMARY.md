@@ -16,6 +16,8 @@
     - [enums..?](ch01-04-enums.md)
     - [Optional..?](ch01-05-option.md)
     - [match](ch01-06-match.md)
+    - [except](ch01-07-except.md)
+    - [interface](ch01-08-interface.md)
 - [Sortieralgorithmen](ch02-00-sortieren.md)
     - [Bubblesort](ch02-01-bubble.md)
     - [Quicksort](ch02-02-quick.md)
