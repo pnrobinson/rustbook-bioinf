@@ -46,8 +46,6 @@ Der Trait [FromString](https://doc.rust-lang.org/std/str/trait.FromStr.html) ist
 ```rust
 pub trait FromStr: Sized {
     type Err;
-
-    // Required method
     fn from_str(s: &str) -> Result<Self, Self::Err>;
 }
 ```
@@ -56,7 +54,7 @@ Die parse-Method erwartet nur, dass ein Datentyp diesen Trait implementiert.
 
 ```rust
 pub fn parse<F: FromStr>(&self) -> Result<F, F::Err> {
-        FromStr::from_str(self)
+    FromStr::from_str(self)
 }
 ```
 
@@ -67,7 +65,7 @@ struct DnaString {
 }
 ````
 
-Um unsere Struktur mit <code>parse</code> verwenden zu können, müssen wir zwei Traits implementieren. Unser Code überprüft, ob alle Zeichen in dem zu parsenden String A, C, G, order T sind.
+Um unsere Struktur mit <code>parse</code> verwenden zu können, müssen wir <code>FromStr</code>   implementieren. Unser Code überprüft, ob alle Zeichen in dem zu parsenden String A, C, G, order T sind.
 
 ```rust
 use std::str::FromStr;
@@ -94,7 +92,6 @@ impl FromStr for DnaString {
 #[cfg(test)]
 mod test {
     use super::DnaString;
-
 
     #[test]
     fn test_dna_parse() {
