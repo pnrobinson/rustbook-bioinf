@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Quicksort - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="quicksort"><a class="header" href="#quicksort">Quicksort</a></h1>
+<div class="emphasis-box">
+    <strong>Ziele:</strong>
+    <ol>
+    <li>Slices verstehen</li>
+    <li>quicksort-Algorithmus in idiomatischem Rust programmieren</li>
+    <li>lldb Debugger verstehen</li>
+    </ol>
+</div>
+<ul>
+<li>Texte teilweise von <a href="https://de.wikipedia.org/wiki/Quicksort">Wikipedia</a> angepasst.</li>
+<li>Einführung auf <a href="https://www.youtube.com/watch?v=h8eyY7dIiN4&amp;ab_channel=CodingwithJohn">YouTube</a>.</li>
+</ul>
+<p>Quicksort ist ein schneller, rekursiver Sortieralgorithmus, der nach dem Prinzip <em>Teile und herrsche</em> arbeitet. Im Durchschnitt führt der Quicksort-Algorithmus \(O(n\cdot log(n))\) Vergleiche durch.</p>
+<p>Zunächst wird die zu sortierende Liste in zwei Teillisten („linke“ und „rechte“ Teilliste) getrennt. Dazu wählt Quicksort ein sogenanntes Pivotelement aus der Liste aus. Alle Elemente, die kleiner als das Pivotelement sind, kommen in die linke Teilliste, und alle, die größer sind, in die rechte Teilliste. Die Elemente, die gleich dem Pivotelement sind, können sich beliebig auf die Teillisten verteilen. Nach der Aufteilung sind die Elemente der linken Liste kleiner oder gleich den Elementen der rechten Liste.</p>
+<p>Anschließend muss man also noch jede Teilliste in sich sortieren, um die Sortierung zu vollenden. Dazu wird der Quicksort-Algorithmus jeweils auf der linken und auf der rechten Teilliste ausgeführt. Jede Teilliste wird dann wieder in zwei Teillisten aufgeteilt und auf diese jeweils wieder der Quicksort-Algorithmus angewandt, und so weiter. Diese Selbstaufrufe werden als Rekursion bezeichnet. Wenn eine Teilliste der Länge eins oder null auftritt, so ist diese bereits sortiert und es erfolgt der Abbruch der Rekursion.</p>
+<p>Wir haben hier den Java-Code vom oben genannten YouTube-Video leicht angepasst bzw. kommentiert wiedergegeben. Sie können optional das Programm laufen lassen, indem Sie den Code in eine Datei namens Quick.java kopieren und diese Datei mit <code>$ javac Quick.java</code>kompliieren und das Ergebnis mit <code>$ java Quick</code>ausführen.</p>
+<pre><code class="language-java">import java.util.Random;
+
+public class Quicksort {
+
+  public static void main(String[] args) {
+    int[] numbers = [4, 6, 1, 8, 13, 33, 2];
+    printArray(numbers);
+    quicksort(numbers);
+    printArray(numbers);
+  }
+
+  private static void quicksort(int[] array, int lowIndex, int highIndex) {
+    // 1. Basisfall der Rekursion: jedes Feld mit nur einem Element ist schon sortiert!
+    if (lowIndex &gt;= highIndex) {
+      return;
+    }
+    // 2. Das letzte ElementWir dient als Pivotelement
+    int pivot = array[highIndex];
+    // 3. Die zu sortierende Liste in zwei Teillisten wird in zwei Unterlisten getrennt.
+    // Alle Elemente, die kleiner als das Pivotelement sind, kommen in die linke Teilliste, 
+    // und alle, die größer sind, in die rechte Teilliste.
+    // Nach Ausruf von 'partition' ist die Position des Pivotelements korrekt, aber die
+    // linke und rechte Unterlisten sind nicht unbedingt richtig sortiert
+    int leftPointer = partition(array, lowIndex, highIndex, pivot);
+    // 4. Sortierte die linke Unterliste (rekursiv)
+    quicksort(array, lowIndex, leftPointer - 1);
+    // 5. Sortierte die rechte Unterliste (rekursiv)
+    quicksort(array, leftPointer + 1, highIndex);
+
+  }
+
+  private static int partition(int[] array, int lowIndex, int highIndex, int pivot) {
+    int leftPointer = lowIndex;
+    int rightPointer = highIndex - 1;
+
+    while (leftPointer &lt; rightPointer) {
+        // 1. Von links gehen, bis eine Zahl gefunden wird, die größer als der Pivot ist, 
+        // oder der linke Zeiger mit dem rechten identisch ist
+        while (array[leftPointer] &lt;= pivot &amp;&amp; leftPointer &lt; rightPointer) {
+            leftPointer++;
+        }
+        // 2. Von rechts gehen, bis eine Zahl gefunden wird, die kleiner als der Pivot ist, 
+        // oder der rechte Zeiger mit dem linken identisch ist.
+        while (array[rightPointer] &gt;= pivot &amp;&amp; leftPointer &lt; rightPointer) {
+        rightPointer--;
+        }
+        //  3. Die Werte vertauschen, auf die der linke und der rechte Zeiger zeigen
+        swap(array, leftPointer, rightPointer);
+    }
+    // 4. An dieser Stelle muss das Pivotelement mit dem Wert am linken Zeiger vertauscht werden
+    // (highIndex ist der Index des Pivotelements)
+    if(array[leftPointer] &gt; array[highIndex]) {
+      swap(array, leftPointer, highIndex);
+    }
+    else {
+      leftPointer = highIndex;
+    }
+    
+    return leftPointer;
+  }
+
+  private static void swap(int[] array, int index1, int index2) {
+    int temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  }
+
+  private static void printArray(int[] numbers) {
+    for (int i = 0; i &lt; numbers.length; i++) {
+      System.out.println(numbers[i]);
+    }
+  }
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch02-01-bubble.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-00-fastq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch02-01-bubble.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-00-fastq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

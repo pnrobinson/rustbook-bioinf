@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Datei-Benenunng - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="illumina-fastq-dateibenennungsschema"><a class="header" href="#illumina-fastq-dateibenennungsschema">Illumina FASTQ-Dateibenennungsschema</a></h1>
+<p>Illumina verwendet ein Standardbenennungsschema für FASTQ-Dateien. Es ist nützlich zu verstehen, wie dieses Schema aufgebaut ist. Das allgemeine Schema für solche Dateien lautet</p>
+<code>
+{Probenname}_{Barcode_sequenz}_L{Spurnummer}_R{Readnummer}_{Satz_Nummer}.fastq.gz 
+</code>, 
+<p>d.h.,  english</p>
+<code>
+{sample_name}_{barcode_sequence}_L{lane}_R{read_number}_{set_number}.fastq.gz 
+</code>.
+<p>Schauen wir uns die folgende GIAB-Datei (<a href="https://www.nist.gov/programs-projects/genome-bottle">Genome in a bottle</a>) an:</p>
+<pre>
+NIST7035_TAAGGCGA_L001_R1_001.fastq.gz
+</pre>
+<p>Die Bestandteile dieses Namens sind:</p>
+<ol>
+<li><code>sample_name</code>: NIST7035. Dies ist der Probenname, der im Probenblatt für den Sequenzierungslauf angegeben ist. </li>
+<li><code>barcode_sequence</code>: TAAGGCGA. Dies ist die Nukleotidsequenz des molekularen Barcodes, der zur Markierung der Probe für das Multiplexing verwendet wird. </li>
+<li><code>lane</code>: 001. Die Lane-Nummer (1--8).
+<li><code>Spurnummer</code> (d.h., read number): 1. Die Read-Nummer für Paired-End-Reads. R1 bedeutet Read 1, und für einen Paired-End-Sequenzierungslauf gibt es eine zusätzliche Datei mit R2 (Read 2), deren Name ansonsten genau dem Dateinamen für Read 1 entspricht</li>
+<li><code>set_number</code>: 001. Die maximale Dateigröße von FASTQ-Dateien wird mit der Befehlszeilenoption <code>--fastq-cluster-count</code> des Skripts <code>configureBclToFastq.pl</code> festgelegt, das Teil der Illumina \index{CASAVA} CASAVA-Software-Suite gehört. Wenn mehr Daten vorhanden sind, werden die Daten in separate FASTQ-Dateien mit der entsprechenden Dateigröße aufgeteilt (Um nur eine einzige FASTQ-Datei zu erstellen, kann eine ``0'' angegeben werden). Die verschiedenen Dateien, die derselben Probe/demselben Barcode/derselben Spur entsprechen, werden durch die mit 0 gefüllte dreistellige Set-Nummer unterschieden.</li>
+</ol>
+<p>Bestimmte Illumina-Sequenzer verwenden andere FASTQ-Dateibenennungsschemata. Einzelheiten finden Sie in der Illumina-Dokumentation.</p>
+<h2 id="paired-end-sequenzierung"><a class="header" href="#paired-end-sequenzierung">Paired-End-Sequenzierung</a></h2>
+<p>Beachten Sie, dass bei Paired-End-Läufen die übereinstimmenden FASTQ-Dateien genau die gleiche Anzahl von Reads aufweisen müssen und die Reads in beiden Dateien die gleiche Reihenfolge haben müssen. Dies kann mit den UNIX-Befehlen <code>zcat</code> und <code>wc</code> überprüft werden. Der Befehl <code>cat</code> liest Daten aus Textdateien und gibt deren Inhalt auf der Befehlszeilenschnittstelle aus, und der Befehl \verb+zcat+ tut dasselbe mit gzip-komprimierten Dateien. Der Befehl <code>wc</code> zählt Wörter, Zeilen und Zeichen in Textdateien. Wenn wir die Befehle wie folgt kombinieren, sehen wir, dass jede der beiden heruntergeladenen Dateien die gleiche Anzahl von Zeilen hat.</p>
+<pre>
+$ zcat NIST7035_TAAGGCGA_L001_R1_001.fastq.gz | wc -l
+80812008
+$ zcat NIST7035_TAAGGCGA_L001_R2_001.fastq.gz | wc -l
+80812008
+</pre>
+<p>Wir können nun die Gesamtzahl der Zeilen durch vier teilen, um die Gesamtzahl der Reads zu erhalten (da jeder Read insgesamt vier Zeilen in der FASTQ-Datei einnimmt). Beachten Sie, dass wir nicht einfach nach Zeilen suchen können, die mit <code>@</code> beginnen, da das ASCII-Symbol, das einem Phred-Score von 31 entspricht, ebenfalls <code>@</code> ist und somit auch Qualitätszeilen mit diesem Zeichen beginnen können.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-02-ascii.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-04-readnaming.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-02-ascii.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-04-readnaming.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>optional - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sam-tags-optionale-felder"><a class="header" href="#sam-tags-optionale-felder">SAM-TAGs: Optionale Felder</a></h1>
+<p>Auf die 11 Pflichtfelder können beliebig viele optionale Felder folgen. Alle optionalen Felder folgen dem
+<code>TAG:TYPE:VALUE</code>-Format, wobei <code>TAG</code> eine zweistellige Zeichenfolge, <code>TYPE</code> einer von sechs Datentypen (Tabelle 1) und <code>VALUE</code> der tatsächliche Wert ist.</p>
+<table>
+  <caption>SAM-Format: Datentypen für die optionalen Tags</caption>
+  <thead>
+    <tr>
+      <th>Typ</th>
+      <th>Beschreibung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>A</code></td>
+      <td>Einzelzeichen</td>
+    </tr>
+    <tr>
+      <td><code>Z</code></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code>i</code></td>
+      <td>32-Bit-Ganzzahl mit Vorzeichen</td>
+    </tr>
+    <tr>
+      <td><code>f</code></td>
+      <td>Float mit einfacher Genauigkeit (reelle Zahl)</td>
+    </tr>
+    <tr>
+      <td><code>H</code></td>
+      <td>Hexadezimalzahl-String</td>
+    </tr>
+    <tr>
+      <td><code>B</code></td>
+      <td>Allgemeines Array</td>
+    </tr>
+  </tbody>
+</table>
+<p>Verschiedene Aligner verwenden unterschiedliche optionale Felder. Leser finden eine vollständige Dokumentation allgemeiner Felder bei SAMtools
+Website<sup class="footnote-reference"><a href="#note">1</a></sup> und Aligner wie BWA stellen ebenfalls Dokumentation zu den von ihnen verwendeten Feldern bereit. Hier stellen wir einige ausgewählte Bereiche vor, um den Lesern einen Eindruck davon zu vermitteln, wie diese Bereiche in der Praxis eingesetzt werden.</p>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
+<p><a href="https://samtools.github.io/hts-specs/SAMtags.pdf">SAMtags</a>.</p>
+</div>
+<h3 id="das-nm-feld"><a class="header" href="#das-nm-feld">Das NM-Feld</a></h3>
+<p>Das vordefinierte <code>NM</code>-Tag nimmt einen ganzzahligen Wert (<code>i</code>) an.
+Das Feld <code>NM</code> gibt den Bearbeitungsabstand zur Referenz an, einschließlich Mehrdeutigkeit
+bases\footnote{``N'' bases</code>, jedoch ohne Clipping. Denken Sie daran, dass der CIGAR-String <code>101M</code>
+zeigt an, dass ein 101 nt langer Lesevorgang lückenlos mit dem Genom abgeglichen wurde. Allerdings macht es das nicht
+jede Aussage darüber, ob das Alignment nicht übereinstimmende Positionen (Sequenzinkongruenzen) enthielt. A
+Der CIGAR-String von <code>101M</code> und das Tag <code>NM:i:0</code> stimmen jedoch perfekt überein (Abstand bearbeiten).
+von Null). Bei einem Lesevorgang mit einer CIGAR-Zeichenfolge von <code>101M</code> und dem Tag <code>NM:i:1</code> stimmt eine nicht überein
+Basis (Distanz von eins bearbeiten).</p>
+<h3 id="das-md-feld"><a class="header" href="#das-md-feld">Das MD-Feld</a></h3>
+<p>Das Feld <code>MD</code> liefert zusätzliche, referenzzentrierte Informationen über die Ausrichtung. Es handelt sich um eine Zeichenfolge für nicht übereinstimmende Positionen, die es ermöglicht, ohne Blick auf die Referenz abzuleiten, wo sich Einzelnukleotidvarianten (SNVs) und Deletionen befinden. Die Funktionsweise des Feldes <code>MD</code> lässt sich am einfachsten anhand eines Beispiels erklären. Einer der Reads im NA12878-Exom wurde auf chr1:21989502 mit einer Zuordnungsqualität von Null (es lässt sich genauso gut auf eine andere Position auf Chromosom 1 abbilden) und einer CIGAR-Zeichenfolge von <code>101M</code> abgebildet. Betrachten Sie das <code>MD</code>-Tag:</p>
+<pre>
+MD:Z:2C77A4G4A5C4 
+</pre>
+<p>Dies bedeutet, dass es zwei Sequenzübereinstimmungen gibt (beginnend an der
+Position POS=21989502 auf der
+Referenz chr1), gefolgt von einer Nichtübereinstimmung mit einem C in der Referenz,
+77 Übereinstimmungen, einer Nichtübereinstimmung mit A, 4
+weitere Übereinstimmungen, ein nicht übereinstimmendes G, 4 Übereinstimmungen,
+ein weiteres nicht übereinstimmendes A, 5 Übereinstimmungen, ein nicht übereinstimmendes C und endlich 4 Übereinstimmungen.
+Vergleichen Sie das Alignment mit der entsprechenden Region von Chromosom 1:</p>
+<pre>
+read: TGTGGTGACCTGACCATCCTGGTTTGCCTGGAACTTCAGGAGTGAAGACA
+      || |||||||||||||||||||||||||||||||||||||||||||||||
+ref:  TGCGGTGACCTGACCATCCTGGTTTGCCTGGAACTTCAGGAGTGAAGACA
+
+read: CTGGACATTTAATGCTAAAACTGGGAAGGTCCCAGAAAAAGTGGGAAAAG
+      |||||||||||||||||||||||||||||| |||| |||| ||||| |||
+ref:  CTGGACATTTAATGCTAAAACTGGGAAGGTACCAGGAAAAATGGGACAAG
+
+read: T
+      |
+ref:  T 
+</pre>
+<p>Betrachten wir nun ein Beispiel mit einer Löschung. Dies ist ein auf chr1:31504512 abgebildeter Lesevorgang mit einer CIGAR-Zeichenfolge von <code>11M5D60M</code> (Gesamtlänge des zugeordneten Lesevorgangs 83 Nukleotide) und einem Tag von <code>MD:Z:11^TTTTG6G23G29</code> . Der CIGAR-String sagt uns, dass der Lesevorgang für die ersten 11 Basen ausgerichtet ist, dann eine Deletion von 5 Nukleotiden aufweist und erneut für 60 Basen ausgerichtet ist. Die CIGAR-Zeichenfolge sagt uns nicht, welche Basen gelöscht wurden, und sie sagt uns auch nicht, ob es sich bei den ausgerichteten Basen um Übereinstimmungen oder Nichtübereinstimmungen handelt. Der <code>MD</code>-String sagt uns, dass die ersten 11 Basen perfekt übereinstimmen, dass die Basen TTTTG gelöscht wurden (dies wird durch das Caret-Zeichen <code>^</code> gefolgt von den gelöschten Basen, <code>^TTTTG</code>, angezeigt), die folgenden 6 übereinstimmende Basen, gefolgt von einem nicht übereinstimmenden G in der Referenz, 23 übereinstimmende Basen, gefolgt erneut von einem nicht übereinstimmenden G in der Referenz, gefolgt von 29 übereinstimmenden Basen.</p>
+<pre>
+read: TTGGGCAAGTT.....TTTTTTTTTTTTTTTTTTTTTTTTTGAGACAGAG
+      |||||||||||     |||||| ||||||||||||||||||||||| |||
+ref:  TTGGGCAAGTTTTTTGTTTTTTGTTTTTTTTTTTTTTTTTTGAGACGGAG
+
+read: TCTCTCTCTGTTGCCCGGGCTGGAGT
+      ||||||||||||||||||||||||||
+ref:  TCTCTCTCTGTTGCCCGGGCTGGAGT 
+</pre>
+<p>Wenn es mehrere benachbarte Nichtübereinstimmungen gibt, dann ist eine 0
+gebraucht. Zum Beispiel</p>
+<pre>
+Read: CGATACGGGGAC
+      |  |||  ||||
+Ref:  CACTACTCGGAC
+</pre>
+<p>Dies würde die CIGAR 12M (zwölf ausgerichtete Positionen ohne Insertionen oder Deletion) ergeben.</p>
+<p>Der <code>MD</code>-String <code>MD:Z:1A0C3T0C4</code> hinweist darauf hin, dass es zwischen den nicht übereinstimmenden A und C und T und C keine (0) passenden Basen gibt. Falls es sich bei der ersten oder letzten Base um eine Sequenzfehlanpassung handelt, wird dieser ebenfalls eine 0 vorangestellt oder folgt (z. B. <code>MD:Z:0A100</code> oder <code>MD:Z:100A0</code>).</p>
+<p>Wenn es mehrere benachbarte Nichtübereinstimmungen gibt, dann ist eine 0
+gebraucht. Zum Beispiel</p>
+<pre>
+read: CGATACGGGGAC
+      |  |||  ||||
+ref:  CACTACTCGGAC
+</pre>
+<p>Dies würde die CIGAR 12M (zwölf ausgerichtete Positionen ohne) ergeben
+Einfügungen oder Löschungen) und die <code>MD</code>-Zeichenfolge <code>MD:Z:1A0C3T0C4</code>,
+was darauf hinweist, dass es zwischen den nicht übereinstimmenden A und C und T und C
+keine (0) passenden Basen gibt. Falls es sich bei der ersten oder letzten Base um eine
+Sequenzfehlanpassung handelt, wird dieser ebenfalls eine 0 vorangestellt oder folgt
+(z. B., <code>MD:Z:0A100</code> oder <code>MD:Z:100A0</code>).</p>
+<p>Beachten Sie, dass Einfügungen nicht im Feld <code>MD</code> angegeben werden,
+da es referenzzentriert ist und eine Einfügung keinen Informationsverlust über die
+Referenz darstellt. Darüber hinaus können die eingefügten Basen zusammen mit dem
+CIGAR-String eines Lesevorgangs aus dem <code>SEQ</code>-Feld abgeleitet werden.
+Die CIGAR-Zeichenfolge <code>30M1I70M</code> entspricht beispielsweise
+<code>MD:Z:100</code>, wenn alle ausgerichteten Basen (<code>M</code>)
+Sequenzübereinstimmungen aufweisen. Der Read hat insgesamt 101 Basen, aber nur die 100 Referenzbasen, an denen er ausgerichtet ist, werden im <code>MD</code>-Tag beschrieben.</p>
+<p>Das Feld <code>MD</code> muss mit der CIGAR-Zeichenfolge kompatibel sein (Einfügungen ausgenommen).</p>
+<p>Dies würde die CIGAR 12M (zwölf ausgerichtete Positionen ohne) ergeben
+Einfügungen oder Löschungen) und die <code>MD</code>-Zeichenfolge <code>MD:Z:1A0C3T0C4</code>, was darauf hinweist, dass es zwischen den nicht übereinstimmenden A und C und T und C keine (0) passenden Basen gibt. Falls es sich bei der ersten oder letzten Base um eine Sequenzfehlanpassung handelt, wird dieser ebenfalls eine 0 vorangestellt oder folgt (z. B. <code>MD:Z:0A100</code> oder <code>MD:Z:100A0</code>).</p>
+<h3 id="das-rg-feld"><a class="header" href="#das-rg-feld">Das RG-Feld</a></h3>
+<p>Das <code>RG</code>-Feld gibt die Lesegruppe des Lesevorgangs an, z. B. \verb+RG:Z:rg1+. .</p>
+<h3 id="das-as-feld"><a class="header" href="#das-as-feld">Das AS-Feld</a></h3>
+<p>Das Feld <code>AS</code> gibt den vom Aligner generierten Alignment-Score an. Beispielsweise gibt \verb+AS:i:84+ an, dass BWA-MEM dem Lesevorgang einen Alignment-Score von 84 zugewiesen hat.</p>
+<h3 id="für-endbenutzer-reservierte-felder"><a class="header" href="#für-endbenutzer-reservierte-felder">Für Endbenutzer reservierte Felder</a></h3>
+<p>Die Felder <code>X?:?</code>, <code>Y?:?</code> und <code>Z?:?</code> sind für Endbenutzer reserviert. Das bedeutet, dass Ausrichtungsprogramme wie BWA ihre eigenen Felder definieren dürfen, deren Tags mit den Buchstaben X, Y oder Z beginnen. BWA hat eine Reihe von Tags definiert, die mit X beginnen. Beachten Sie, dass die verschiedenen BWA-Programme unterschiedliche Kombinationen von verwenden Tags. Beispielsweise zeigt das Tag <code>XA</code> alternative Ausrichtungen im folgenden Format an: <code>chr,pos,CIGAR,NM;</code> für jede alternative Ausrichtung. Zum Beispiel,</p>
+<pre>
+XA:Z:chr1,+13074589,101M,3;chr1,-13152100,101M,3;chr1, \
+-12882405,101M,3;chr1,-12827800,101M,4; \
+chr1_KI270766v1_alt,-97694,98M3S,3;	
+</pre>
+<p>Dieses Tag zeigt, dass der Lesevorgang auch alternativen Orten zugeordnet werden könnte. Der erste alternative Treffer befand sich auf Chromosom 1 an Position 13.074.589, er war ohne Indels ausgerichtet (CIGAR <code>101M</code>) und die Bearbeitungsentfernung (<code>NM</code>) betrug drei. Eine negative Position zeigt an, dass die alternative Ausrichtung auf dem umgekehrten Strang liegt.  Zu den weiteren optionalen Tags von BWA gehört <code>XS</code>, das den suboptimalen Alignment-Score anzeigt.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-06-samtools.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-08-exercises.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-06-samtools.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-08-exercises.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

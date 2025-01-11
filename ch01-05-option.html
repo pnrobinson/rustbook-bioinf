@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Optional..? - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="optional"><a class="header" href="#optional">Optional..?</a></h1>
+<p>In C wird oft der Wert NULL verwendet, um anzuzeigen, dass ein Zeiger keinen gültigen Wert enthält,</p>
+<p>Das Problem mit Nullwerten besteht darin, dass du einen Fehler erhältst, wenn du versuchst, einen Nullwert als Nicht-Nullwert zu verwenden.</p>
+<p>Aus diesem Grunde haben viele neuere Programmiersprachen wie
+Python und Java "Optional"-Datentypen.</p>
+<p>Optional[int] bedeutet, dass die Funktion entweder einen int oder None zurückgeben kann.</p>
+<pre><code class="language-C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+// Funktion, die eine Zeichenkette zurückgibt oder NULL, wenn der Schlüssel nicht gefunden wird
+const char* find_value(const char* key) {
+    if (strcmp(key, "a") == 0) {
+        return "Wert A";
+    } else if (strcmp(key, "b") == 0) {
+        return "Wert B";
+    }
+    return NULL;  // Kein Wert gefunden
+}
+
+int main() {
+    const char* result;
+
+    result = find_value("a");  // Schlüssel gefunden
+    if (result != NULL) {
+        printf("Gefundener Wert: %s\n", result);
+    } else {
+        printf("Kein Wert gefunden\n");
+    }
+
+    result = find_value("c");  // Schlüssel nicht gefunden
+    if (result != NULL) {
+        printf("Gefundener Wert: %s\n", result);
+    } else {
+        printf("Kein Wert gefunden\n");
+    }
+
+    return 0;
+}
+</code></pre>
+<p>In Java gibt es deshalb die Klasse Optional, die   verwendet wird, um anzuzeigen, dass ein Wert entweder vorhanden ist oder fehlt.</p>
+<pre><code class="language-java">import java.util.Optional;
+
+public class Main {
+    public static void main(String[] args) {
+        // Ein Optional mit einem Wert
+        Optional&lt;String&gt; someValue = findValue("a");
+        someValue.ifPresentOrElse(
+            value -&gt; System.out.println("Gefundener Wert: " + value),
+            () -&gt; System.out.println("Kein Wert gefunden")
+        );
+
+        // Ein Optional ohne Wert
+        Optional&lt;String&gt; noValue = findValue("c");
+        noValue.ifPresentOrElse(
+            value -&gt; System.out.println("Gefundener Wert: " + value),
+            () -&gt; System.out.println("Kein Wert gefunden")
+        );
+    }
+
+    public static Optional&lt;String&gt; findValue(String key) {
+        if ("a".equals(key)) {
+            return Optional.of("Wert A");
+        } else if ("b".equals(key)) {
+            return Optional.of("Wert B");
+        }
+        return Optional.empty(); // Kein Wert gefunden
+    }
+}
+</code></pre>
+<p>In Rust gibt es die Aufzählung "Option<T>":</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Option&lt;T&gt; {
+    None,
+    Some(T),
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Sie wird wie folgt verwendet.</p>
+<pre><pre class="playground"><code class="language-rust">fn find_value(key: &amp;str) -&gt; Option&lt;&amp;str&gt; {
+    match key {
+        "a" =&gt; Some("Wert A"),
+        "b" =&gt; Some("Wert B"),
+        _ =&gt; None,
+    }
+}
+
+fn main() {
+    if let Some(value) = find_value("a") {
+        println!("Gefundener Wert: {}", value);
+    } else {
+        println!("Kein Wert gefunden");
+    }
+}</code></pre></pre>
+<p>Option ist ein zentrales und unverzichtbares Konstrukt in Rust, das nicht nur für Sicherheit und Klarheit sorgt, sondern auch das Risiko von Fehlern durch null-Referenzen vollständig eliminiert. Das Enum Option in Rust repräsentiert einen Wert, der entweder vorhanden ist (Some(T)) oder fehlt (None). Es wird häufig verwendet, um Werte oder Operationen sicher zu behandeln, die möglicherweise keinen Wert zurückgeben.</p>
+<p>S. " Aufzählung Option und ihre Vorteile gegenüber Nullwerten" in dem <a href="https://rust-lang-de.github.io/rustbook-de/ch06-01-defining-an-enum.html">enum Kapitel</a> des Rust-Buchs.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-04-enums.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch01-06-match.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-04-enums.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch01-06-match.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

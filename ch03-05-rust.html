@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>FASTQ-Analyse mit Rust - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="fastq-analyse-mit-rust"><a class="header" href="#fastq-analyse-mit-rust">FASTQ-Analyse mit Rust</a></h1>
+<div class="emphasis-box">
+    <strong>Ziele:</strong>
+    <ol>
+    <li>Einfache Qualitätsbewertungsroutinen in idiomatischem Rust programmieren.</li>
+     <li>GitHub.</li>
+    <li>Test-Driven Development.</li>
+    </ol>
+</div>
+<p>In diesem Abschnitt wollen wir eine einfache Rust-Version des Tools <a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a> schreiben.</p>
+<h2 id="github"><a class="header" href="#github">GitHub</a></h2>
+<p>GitHub ist eine Online-Plattform, die Entwicklern und Teams Werkzeuge zur Versionskontrolle und Zusammenarbeit an Softwareprojekten bietet. Sie basiert auf Git, einem weit verbreiteten Versionskontrollsystem, und erweitert dessen Funktionen um eine benutzerfreundliche Weboberfläche sowie zahlreiche zusätzliche Funktionen.</p>
+<p>Falls Sie noch nicht mit GitHub gearbeitet haben, arbeiten Sie diesen <a href="https://docs.github.com/de/get-started/start-your-journey/hello-world">Tutorial</a> durch.</p>
+<p>Praktikumsteilnehmer werden kleine Teams bilden, und am Entwicklen der Software zusammenarbeiten. Hierbei werden wir <code>main'' und </code>develop'' Branches verwenden. Teilnehmer sollen Feature-Branches kreieren und Pull-Requests erstellen, welche von anderen Teilnehmern zu kommentieren und ggf. anzunehmen sind.</p>
+<div class="emphasis-box">
+    Wir werden das Arbeiten mit GitHub während des Praktikums erläutern und demonstrieren.
+</div>
+<h2 id="testgetriebene-entwicklung-test-driven-development-tdd"><a class="header" href="#testgetriebene-entwicklung-test-driven-development-tdd">Testgetriebene Entwicklung (Test-Driven Development; TDD)</a></h2>
+<p>Die TDD ist eine Methode zum Schreiben von Code, bei der ein automatisierter Testfall auf Unit-Ebene geschrieben wird, der fehlschlägt, dann wird gerade genug Code geschrieben, um den Test zu bestehen, dann werden sowohl der Testcode als auch der Produktionscode überarbeitet und dann mit einem anderen neuen Testfall wiederholt.</p>
+<h2 id="tdd-in-rust"><a class="header" href="#tdd-in-rust">TDD in Rust</a></h2>
+<p>Wir werden das Erstellen von Unit-Tests in Rust während des Praktikums erläutern und demonstrieren.
+Es folgen Erklärungen zu einem einfachen Beispiel.</p>
+<h3 id="Übung-1"><a class="header" href="#Übung-1">Übung 1</a></h3>
+<p>Die Definition des Phred-Scores in Bezug auf die Fehlerwahrscheinlichkeit wurde in diesem Abschnitt erklärt. Analog dazu lässt sich die Fehlerwahrscheinlichkeit aus der Phred-Punktzahl wie folgt berechnen.</p>
+<p>\[
+p = 10^{-Q/10}<br />
+\]</p>
+<p>Konvertieren Sie die ASCII-Symbole für die Basen des folgenden Reads in Phred-Scores und berechnen Sie den durchschnittlichen Phred-Score dieser Basen. Verwenden Sie dann die Gleichung, um die durchschnittliche Fehlerwahrscheinlichkeit zu berechnen.</p>
+<p>Wir werden im Laufe des Arbeitens mit FASTQ-Dateien überlegen (müssen), welche Datenstrukturen am besten geeignet sind, um die erforderlichen Analysen korrekt und effizient durchzuführen. Für diese Übung wollen wir damit anfangen, einige Funktionen zu schreiben, die den Qualitätsstring bewerten.
+Es folgt ein weiteres Bespiel.</p>
+<pre>
+@My-Illu:6:73:941:1973#0/1
+GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTCAACTCACAGTTT
++
+!''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF>>>>>>CCCCCCC65
+</pre>
+<p>Der folgende einfache Algorithmus kann verwendet werden, um den durchschnittlichen Qualitätswert zu berechnen.</p>
+<pre><code class="language-pseudo">Algorithm read_qual(qual_string)
+    let n = len(qual_string);
+    let qual_sum = 0;
+    for qual in qual_string {
+        let q = calculate_phred(qual)
+        qual_sum += q
+    } 
+    return qual_sum / n
+</code></pre>
+<p>Wir richten die TDD für die function ``calculate_phred'' ein. Wir kreieren eine Datei namens
+fastq.rs und schreiben die folgende Funktion (die natürlich nur für ein bestimmtes Argument das richtige Ergebnis liefert!).</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn calculate_phred(qual: char) -&gt; usigg {
+    42
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Wir richten dann eine Testfunktion ein (in der Regel lohnt es sich, das Testmodul am Ende der jeweiligen Code-Datei unterzubringen)</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+
+mod test {
+    fn test_calculate_phred {
+        let qual: char = '&amp;';
+        let expected:usign =	5; // Phred-Score für das Zeichen '&amp;'
+        let res = calculate_phred(qual);
+        assert_eq!(expected, res);
+    }
+
+    // Alternativ können viele Ergebnisse auf einmal getestet werden:
+    fn test_calculate_phred {
+        let tests: Vec&lt;char, usign&gt; = vec![
+            ('&amp;', 5),
+            ('+', 10)
+        ];
+        for test in tests {
+            let res = calculate_phred(test.0);
+            assert_eq!(test.1, res);
+        }
+    }
+    // ggf. andere Testfunktionen
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Wenn wir diesen Test zum ersten Mal durchführen, wird er natürlich einen Fehler melden.
+Wir arbeiten so lange an der Funktion ``calculate_phred'' bis die korrekt funktioniert.
+Wir arbeiten ggf. an der Funktion solange weiter, bis sie effizient ist. Dann gehen wir zur
+nächsten Funktion...Mit jeder neuen Funktion schreiben wir zunächst einen Test und dann die Funktion.
+Wir lassen jedes Mall alle Tests laufen. Das volle Konzept der TDD umfasst vieles mehr, aber für dieses Praktikum, wollen wir die hier skizzierte, einfache Vorgehensweise für alle Übungen anwenden.</p>
+<p>Schreiben Sie eine korrekte Version der Funktion. Testen alle relevanten Argumente (kann man das "schlau" machen?).</p>
+<p>Schreiben Sie dann eine Funktion für <emph>read_qual</emph> und testen Sie diese Funktion.</p>
+<h2 id="Übung-2"><a class="header" href="#Übung-2">Übung 2</a></h2>
+<p>Schreiben Sie ein kleines Rust-Programm, um die in dem folgenden Datei-Namen enthaltenen Information zu erklären.</p>
+<pre>
+@HWI-D00107:50:H6BP8ACWV:5:2204:10131:51624 2:N:0:AGGCAGAA
+</pre>
+<h2 id="Übung-3"><a class="header" href="#Übung-3">Übung 3</a></h2>
+<p>Schreiben Sie ein kleines Rust-Programm, um die in dem folgenden Read-Namen enthaltenen Information zu erklären.</p>
+<pre>
+@Machine42:1:FC7:7:19:4229:1044 1:N:0:TTAGGC
+</pre>
+<p>\subsubsection*{Exercise 4}
+What does the quality character \verb+&gt;+ mean? What is the associated error probability?</p>
+<h2 id="Übung-4"><a class="header" href="#Übung-4">Übung 4</a></h2>
+<p>Stellen wir uns einen Read zu 1000bb vor, bei dem alle Basen einen Phred-Score von <code>&amp;</code> aufweisen. Berechen Sie die erwartete Anzahl von Fehlern für den Read (unter der Unabhängigkeitsannehma).</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-04-readnaming.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-06-fastqc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-04-readnaming.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-06-fastqc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html lang="de" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CIGAR - Einführung in Rust für Bioinformatiker</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Eine Einführung in Rust mit einigen praktischen Beispielen.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title">Einführung in Rust für Bioinformatiker</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/pnrobinson/rustbook-bioinf" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="cigar"><a class="header" href="#cigar">CIGAR</a></h1>
+<p>Eine CIGAR (Concise Idiosyncratic Gapped Alignment Report) String besteht aus einer Reihe von
+Operationslängen sowie den Operationen, die beschreiben, wie genau ein Read an die Referenzsequenz angeglichen wurde (Abbildung 1).</p>
+<figure>
+<img src="img/CIGAR.png" alt="CIGAR" width="500">
+ <figcaption><strong>Figure 1</strong>
+Der senkrechte Strich stellt ein Alignment von read1 beginnend an Position 3 der Referenz (<i>ref</i>) dar. Das Alignment besteht aus zwei übereinstimmenden Nukleotiden, gefolgt von einer Deletion von 2 Nukleotiden, drei übereinstimmenden Nukleotiden und einer Insertion von einem Nukleotid und zwei übereinstimmenden Nukleotiden. </figcaption>
+</figure>
+<p>Die drei wichtigsten CIGAR-Operationen sind <b>M</b> (Match/Mismatch), <b>I</b> (Insertion) und <b>D</b> (Deletion), aber
+aber es gibt noch sechs weitere Operationen, von denen einige im Folgenden erläutert werden. Alle CIGAR
+Operationen sind in Tabelle 1 zusammengefasst. Eine CIGAR-Zeichenkette kann man sich als eine Reihe
+von Operationslängen plus die CIGAR-Operation, die eine abstrakte und kompakte Darstellung
+beliebiger Ausrichtungen ermöglicht. Betrachten Sie beispielsweise das folgende Alignment, in dem die Abfragesequenz
+(Q) an die Referenzsequenz (R) angeglichen wird, beginnend an Position 7 der Referenzsequenz.</p>
+<pre>
+AGCATGTTAGATAA--GATAGCTGG R
+      || ||||| |||| ||||
+------TTGGATAAAGGATA-CTGG Q
+</pre>
+<p>Es gibt 8 anfängliche Übereinstimmungen, dann eine Einfügung
+von 2 Nukleotiden in die Abfrage, dann vier weitere Übereinstimmungen,
+dann eine Löschung von einer Base in der Abfrage und dann vier weitere
+Übereinstimmungen. Wir können dies als <code>8M2I4M1D4M</code> darstellen.</p>
+<p>Man beachte, dass die dritte Base der Abfragesequenz (G) sich tatsächlich von der Base
+der Referenzsequenz (A) unterscheidet, an die sie angeglichen wurde. Nichtsdestotrotz
+handelt es sich um eine "Alignment match" (Ausrichtungsübereinstimmung)
+(M), obwohl es keine  Sequenzübereinstimmung ist.</p>
+<table>
+  <caption>CIGAR operations</caption>
+  <thead>
+    <tr>
+      <th>Operation (Op)</th>
+      <th>Beschreibung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><tt>M</tt></td>
+      <td><i>Match</i> (Sequenzübereinstimmung oder Fehlübereinstimmung, keiner Insertion oder Deletion)</td>
+    </tr>
+    <tr>
+      <td><tt>I</tt></td>
+      <td>Insertion (zusätzliche Nicht-Referenzbase)</td>
+    </tr>
+    <tr>
+      <td><tt>D</tt></td>
+      <td>Deletion (Referenzbase fehlt in der Lesung)</td>
+    </tr>
+    <tr>
+      <td><tt>N</tt></td>
+      <td>skipped region=übersprungener Bereich aus der Referenz</td>
+    </tr>
+    <tr>
+      <td><tt>S</tt></td>
+      <td>soft clipping (geclippte Sequenzen noch in SEQ vorhanden)</td>
+    </tr>
+    <tr>
+      <td><tt>H</tt></td>
+      <td>hartes Clipping (geclippte Sequenzen nicht in SEQ vorhanden)</td>
+    </tr>
+    <tr>
+      <td><tt>P</tt></td>
+      <td>padding (stille Löschung aus gepolsterter Referenz)</td>
+    </tr>
+    <tr>
+      <td><tt>=</tt></td>
+      <td>sequence match: Sequenzübereinstimmung</td>
+    </tr>
+    <tr>
+      <td><tt>X</tt></td>
+      <td>sequence mismatch=Sequenz-Fehlanpassung</td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="Übung-1"><a class="header" href="#Übung-1">Übung 1</a></h3>
+<p>Nehmen Sie eine Referenz- und eine Querysequenz sowie den CIGAR-String, der das Alignment spezifiziert (z.B. von Abb. 1). In unserem Beispiel wären die drei Argumente also</p>
+<ul>
+<li>Query (read_4): GCATCTGTTG</li>
+<li>Ref: GCATACTGTTG</li>
+<li>CIGAR: 4M1D6M</li>
+</ul>
+<p>Das Ziel ist es, eine Funktion zu schreiben, welche das entsprechende Alignment ausgibt, also in unserem Beispiel</p>
+<pre>
+GCAT-CTGTTG
+|||| ||||||
+GCATACTGTTG
+</pre>
+<h1 id="Übung-2"><a class="header" href="#Übung-2">Übung 2</a></h1>
+<p>Probieren Sie Ihre Funktion mit "realistischen" BAM-Dateien -- wir haben eine TODO -- "kleine" BAM-Datei erstellen.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-01-basics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-03-clipped.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-01-basics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-03-clipped.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>
