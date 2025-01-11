@@ -5,7 +5,7 @@ Das zweite Feld jedes Datensatzes in einer SAM-Datei stellt ein Bitfeld mit Wert
 Das SAM-Format verwendet 12 Bitflags, von denen jedes den Wert 1 (Ja, Wahr) oder 0 (Nein, Falsch) haben kann. Die Bitflags können unabhängig voneinander kombiniert werden und werden in SAM-Dateien als entsprechender dezimaler Ganzzahlwert angezeigt.
 
 <table>
-  <caption>SAM-Format: Bitflags</caption>
+  <caption>Tabelle 1: SAM-Format und Bitflags</caption>
   <thead>
     <tr>
       <th>Bit (hex)</th>
@@ -102,36 +102,47 @@ und wenn Sie Programme wie SAMtools verwenden, um damit zu arbeiten, ist es hilf
 zwischen diesen drei Zahlendarstellungen.
 
 
+Ein Wert von 99 zeigt zum Beispiel folgende Ergebnisse an:
 
-For example, a value of 99 indicates that the read has multiple segments in sequencing (usually this 
-refers to a paired-end or mate-pair read; 0x1=1$\times$16$^0$=1), that each segment of the read 
-could be mapped properly (correct mapping of both reads of the read pair, 0x2=2$\times$16$^0$=2), 
-that the mate read is mapped to the reverse strand (0x20=2$\times$16$^1$=32), and that the read 
-being referred to in the current SAM record is the first segment in the template (the first read in 
-the pair, 0x40=4$\times$16$^1$=64) (Figure~\ref{fig:sambitflags} and Table~\ref{tab:sambitflag}). 
+- der Read mehrere Segmente in der Sequenzierung hat,[^note0] d.h.,  0x1= \\(1\times 16^0=1\\)
+- jedes Segment des Reads konnte richtig gemappt werden (korrektes Mapping beider Reads des Read-Paares), d.h.,  0x2=\\(2 \times 16^0=2\\) 
+- der Mate-Read auf den Rückwärtsstrang gemappt ist, d.h., 0x20=\\(2\times16^1=32\|))
+- der Read, auf den im aktuellen SAM-Datensatz Bezug genommen wird, ist das erste Segment im Tempalte  (der erste Read im  dem Paar, d.h.,  0x40=\\(4\times 16^1=64\\)) 
+
+Um zu verstehen, wie die Bitfelder dargestellt werden, ist es hilfreich, sich an die Position zu erinnern  Die Notation von Zahlen funktioniert. 
+In der bekannten Dezimalschreibweise steht die Zahl 453 für \\(4\times 10^2 +  5\times 10^1+3\times10^0= 400 + 50 + 3 = 453\\). 
+In binärer Schreibweise steht eine Zahl wie 101101 für 
+\\(1\times 2^5+0\times 2^4+1\times2^3+1\times 2^2+0\times 1^1+1\times 2^0 = 32 + 8+4+1= 45\\) - vgl. hierzu Abbildung 1 und Tabelle 1.  
+
+<figure>
+<img src="img/binary2decimal.png" alt="binary and decimal" width="500">
+ <figcaption><strong>Abbildung 1</strong>
+
+</figcaption>
+</figure>
 
 
 
 
-\begin{figure}[!bt]
-\centering
-\includegraphics[width=1\linewidth]{chapters/formats/img/binary2decimal.pdf} 
-\caption[SAM Bit Flats]{In this example, the bitflags 0x1 (1 in decimal notation), 0x2 (2), 0x20 (32), and 0x40 (64) are set. The decimal representation as displayed in the SAM file is thus 64+32+2+1=99 }
-\label{fig:sambitflags}
-\end{figure}
+Bit-Operationen können verwendet werden, um Lesevorgänge in einer SAM-Datei zu filtern. Das SAM-Format verlangt zum Beispiel, dass für jeden Lesevorgang eine und nur eine der zugehörigen Zeilen folgende Bedingungen erfüllt 
 
-
-
-Bit operations can be used to filter reads in a SAM file. For instance, the SAM format requires that for each read one and only one of the associated lines  satisfies 
-\begin{verbatim}
+<pre>
 FLAG & 0x900 == 0
-\end{verbatim}
-This line is called the \textit{primary line} of the read. The hexadecimal value 0x900 is equal to 0x800 plus 0x100, meaning that the bit flags for supplementary alignment (0x800) and secondary alignment (0x100) are set. Recall that \verb+&+ stands for the  bitwise logical AND operation on a pair of bits. If both bits are 1, the result of the operation is 1, otherwise 0. For example 
-\begin{Verbatim}[frame=single]
+</pre>
+
+Diese Zeile wird als <tt>primäre Zeile</tt> (primary line) des Reads bezeichnet. Der hexadezimale Wert 0x900 ist gleich 0x800 plus 0x100, was bedeutet, dass die Bit-Flags für das supplementäre Alignment (0x800) und das sekundäre Alignment (0x100) gesetzt sind. Erinnern Sie sich, dass <code>&</code> für die bitweise logische UND-Verknüpfung eines Bitpaares steht. Wenn beide Bits 1 sind, ist das Ergebnis der Operation 1, ansonsten 0. Zum Beispiel 
+
+
+<pre>
       1010       
 AND   1100       
      =1000      
-\end{Verbatim}
-Thus, if a read is annotated either as a \index{secondary alignment} secondary alignment\footnote{If a read maps to multiple locations due to repetitive sequences or other reasons, then one of these alignments would be marked primary and all others will have the secondary alignment bitflag set.} 
-or a \index{supplementary alignment} supplementary alignment,\footnote{According to the SAM specification, a chimeric alignment is an alignment of a read that cannot be represented as a linear alignment. Usually this means that a read consists of multiple segments that align to different parts of the genome. The segments do not have large overlaps. One of the  segments is considered to have the representative alignment, and the others are called supplementary and have the supplementary alignment flag set.} 
-then we will obtain \texttt{FLAG \& 0x900 != 0}.\footnote{The result could be 0x100, 0x800 or 0x900.} The SAM format states that an arbitrary number of lines may represent  secondary  or supplementary alignments, but that only one line can be the primary (representative) alignment.
+</pre>
+
+Wenn also ein Read entweder als  sekundäres Alignment[^note]
+oder ein \index{supplementary alignment} supplementary alignment,\footnote{Nach der SAM-Spezifikation ist ein chimäres Alignment ein Alignment eines Reads, das nicht als lineares Alignment dargestellt werden kann. In der Regel bedeutet dies, dass ein Read aus mehreren Segmenten besteht, die sich an verschiedenen Teilen des Genoms ausrichten. Die Segmente haben keine großen Überlappungen. Eines der Segmente wird als das repräsentative Alignment betrachtet, die anderen werden als ergänzend bezeichnet und haben das Flag für ergänzendes Alignment gesetzt.
+dann erhalten wir <code>FLAG \& 0x900 != 0</code>.[^note2] Das SAM-Format besagt, dass eine beliebige Anzahl von Zeilen sekundäre oder ergänzende Ausrichtungen darstellen kann, aber dass nur eine Zeile die primäre (repräsentative) Ausrichtung sein kann.
+
+[^note0]: normalerweise bezieht sich dies auf einen Paired-End- oder Mate-Pair-Read
+[^note]: Wenn ein Read aufgrund von repetitiven Sequenzen oder aus anderen Gründen auf mehrere Stellen abgebildet wird, wird eine dieser Ausrichtungen als primär markiert, und bei allen anderen wird das Bitflag für sekundäres Alignment gesetzt. 
+[^note2]:Das Ergebnis könnte 0x100, 0x800 oder 0x900 sein. 
