@@ -9,3 +9,12 @@ For now, it can be started locally with the following
 cargo install mdbook
 mdbook serve --open
 ```
+
+## Test
+
+We can execute the code examples to ensure they correspond to valid code
+with the following
+
+```shell
+mdbook test
+```
