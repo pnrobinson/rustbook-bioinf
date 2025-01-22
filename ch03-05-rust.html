@@ -197,7 +197,7 @@ GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTCAACTCACAGTTT
 fastq.rs und schreiben die folgende Funktion (die natürlich nur für ein bestimmtes Argument das richtige Ergebnis liefert!).</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>pub fn calculate_phred(qual: char) -&gt; usigg {
+</span>pub fn calculate_phred(qual: char) -&gt; usize {
     42
 }
 <span class="boring">}</span></code></pre></pre>
@@ -205,18 +205,22 @@ fastq.rs und schreiben die folgende Funktion (die natürlich nur für ein bestim
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>#[cfg(test)]
-
 mod test {
-    fn test_calculate_phred {
+
+    use super::calculate_phred;
+    
+    #[test]
+    fn test_calculate_phred() {
         let qual: char = '&amp;';
-        let expected:usign =	5; // Phred-Score für das Zeichen '&amp;'
+        let expected:usize =	5; // Phred-Score für das Zeichen '&amp;'
         let res = calculate_phred(qual);
         assert_eq!(expected, res);
     }
 
     // Alternativ können viele Ergebnisse auf einmal getestet werden:
-    fn test_calculate_phred {
-        let tests: Vec&lt;char, usign&gt; = vec![
+    #[test]
+    fn test_calculate_phred_other() {
+        let tests: Vec&lt;(char, usize)&gt; = vec![
             ('&amp;', 5),
             ('+', 10)
         ];
