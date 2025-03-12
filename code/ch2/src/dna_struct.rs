@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+#[derive(Debug)]
 struct DnaString {
     pub dna: String,
 }
@@ -13,7 +14,7 @@ impl FromStr for DnaString {
     fn from_str(s: &str) -> Result<DnaString, DnaParseError> {
         if s.chars().all(|c| matches!(c, 'A' | 'C' | 'G' | 'T')) {
             let d = DnaString { dna: s.to_string()};
-            writeln!("{}", d);
+            println!("{:?}", d);
             Ok(DnaString { dna: s.to_string()})
         } else {
             Err(DnaParseError)
