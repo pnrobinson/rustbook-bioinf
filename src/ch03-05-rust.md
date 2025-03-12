@@ -72,39 +72,16 @@ Algorithm read_qual(qual_string)
 Wir richten die TDD für die function ``calculate_phred'' ein. Wir kreieren eine Datei namens
 fastq.rs und schreiben die folgende Funktion (die natürlich nur für ein bestimmtes Argument das richtige Ergebnis liefert!).
 
+
 ```rust
-pub fn calculate_phred(qual: char) -> usigg {
-    42
-}
+{{#include ../code/ch3/src/ch3_05.rs:phred}}
 ```
 
 Wir richten dann eine Testfunktion ein (in der Regel lohnt es sich, das Testmodul am Ende der jeweiligen Code-Datei unterzubringen)
 
 
 ```rust
-#[cfg(test)]
-
-mod test {
-    fn test_calculate_phred {
-        let qual: char = '&';
-        let expected:usign =	5; // Phred-Score für das Zeichen '&'
-        let res = calculate_phred(qual);
-        assert_eq!(expected, res);
-    }
-
-    // Alternativ können viele Ergebnisse auf einmal getestet werden:
-    fn test_calculate_phred {
-        let tests: Vec<char, usign> = vec![
-            ('&', 5),
-            ('+', 10)
-        ];
-        for test in tests {
-            let res = calculate_phred(test.0);
-            assert_eq!(test.1, res);
-        }
-    }
-    // ggf. andere Testfunktionen
-}
+{{#include ../code/ch3/src/ch3_05.rs:phred_tests}}
 ```
 Wenn wir diesen Test zum ersten Mal durchführen, wird er natürlich einen Fehler melden. 
 Wir arbeiten so lange an der Funktion ``calculate_phred'' bis die korrekt funktioniert.
