@@ -5,7 +5,7 @@ Das fünfte Feld einer SAM-Datei gibt die Mapping-Qualität des Read an. Der MAP
 der Read an der falschen Position im Genom ausgerichtet ist. Wie der Wert für die Basenqualität handelt es sich dabei um eine Phred-skalierte posteriore Wahrscheinlichkeit, dass die vom Aligner angegebene Mapping-Position falsch ist
 
 \\[ 
-    MAPQ = -10\log_{10} P(\mathrm{mapping position wrong) 
+    MAPQ = -10\log_{10} P(\text{mapping position wrong}) 
 \\]
 
 

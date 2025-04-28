@@ -150,7 +150,7 @@ Einfügungen oder Löschungen) und die <code>MD</code>-Zeichenfolge <code>MD:Z:1
 
 ### Das RG-Feld
 
-Das <code>RG</code>-Feld gibt die Lesegruppe des Lesevorgangs an, z. B. \verb+RG:Z:rg1+. .
+Das <code>RG</code>-Feld gibt die Lesegruppe des Lesevorgangs an, z. B. <code>RG:Z:rg1</code>.
 
 ### Das AS-Feld
 

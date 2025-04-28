@@ -67,8 +67,3 @@ Bestimmen Sie <code>NM</code> für den CIGAR-String <code>50M</code> und den <co
 Bestimmen Sie <code>NM</code> für den CIGAR-String <code>6M1D23M</code> und den <code>MD</code>-Eintrag von <code>MD:Z:1T4^T1C21</code>.
 
 Schreiben und testen Sie eine entsprechende Rustfunktion.
-
-
-
-
-{\it See hints and answers on page~\pageref{page:SAMBAMhints}.}
