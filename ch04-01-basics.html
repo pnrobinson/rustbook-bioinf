@@ -36,10 +36,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -49,8 +50,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -64,7 +65,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -77,8 +79,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -114,6 +116,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -246,7 +249,7 @@ Das SAM-Format verwendet das Wort
 Teilsequenz zu beziehen; zum Beispiel können die beiden Reads eines
 Lesepaares als zwei Segmente bezeichnet werden.</p>
 <p>Das Feld <code>QNAME</code> speichert den Namen der Abfrage-(query)-Sequenz,
-in der Regel ein Read.<sup class="footnote-reference"><a href="#note">1</a></sup>
+in der Regel ein Read.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup>
 POS gibt die Position auf dem Chromosom an, an der der Read
 ausgerichtet wurde. Das Feld <code>FLAG</code> wird weiter unten erklärt.</p>
 <p>Das Feld <code>MAPQ</code> stellt die
@@ -261,11 +264,6 @@ Reads <code>RNEXT</code> auf ``*'' (für <i>not-applicable</i>)  gesetzt.
 <code>PNEXT</code> und  <code>TLEN</code> werden auf 0 gesetzt. Schließlich enthält
 das Feld <code>SEQ</code> die Nukleotidsequenz des Reads und das Feld <code>QUAL</code>
 zeigt die Basenqualitätswerte für jede Position an.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Segmente mit demselben <code>QNAME</code> stammen von der gleichen Vorlage,
-d. h. Reads eines Read-Paares haben normalerweise den gleichen
-<code>QNAME</code>.</p>
-</div>
 <h2 id="paired-end-sequenzen"><a class="header" href="#paired-end-sequenzen">Paired-End-Sequenzen</a></h2>
 <p>In Abbildung 2 werden zwei Paare
 bestehend aus vier Reads der Länge 10 werden auf eine Referenzsequenz der Länge 40 abgebildet. Beachten Sie, dass
@@ -284,7 +282,13 @@ einem Minuszeichen dargestellt.</p>
 SAM-Datei (Minimalbeispiel, Paired-End-Sequenzen). Oben: Alignment. Unten: Entsprechende SAM-Datei.</figcaption>
 </figure>
 <p>Für Paired-End-Reads werden andere bitweise Flags verwendet als für Single-End-Reads. Die Flags <code>99</code> und <code>147</code> zeigen an, dass beide Mitglieder des Paares korrekt auf den Vorwärts- und den Rückwärtsstrang gemappt wurden.</p>
-
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Segmente mit demselben <code>QNAME</code> stammen von der gleichen Vorlage,
+d. h. Reads eines Read-Paares haben normalerweise den gleichen
+<code>QNAME</code>. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

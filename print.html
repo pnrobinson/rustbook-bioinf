@@ -37,10 +37,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -50,8 +51,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -65,7 +66,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -78,8 +80,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -115,6 +117,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -813,7 +816,7 @@ public class Quicksort {
     </ol>
     Wir beginnen mit einer Einführung in das FASTQ-Format. Falls das Format schon bekannt ist, kann die Einführung übersprungen werden.
 </div>
-<p>FASTQ ist ein Dateiformat für den Austausch von Sequenzierungsdaten, das sowohl die Sequenz als auch eine entsprechende Bewertung der Basenqualität enthält.<sup class="footnote-reference"><a href="#note">1</a></sup> Sein Name leitet sich vom ehrwürdigen FASTA-Format ab, einem textbasierten Format zur Darstellung von DNA- und Aminosäuresequenzen, das ursprünglich 1985 zusammen mit einem Softwarepaket für das Alignment von Nukleinsäuren und Proteinen veröffentlicht wurde <a href="https://pubmed.ncbi.nlm.nih.gov/2983426/">Lipman et al. 1985</a>. Das FASTA-Format ist eines der in der Bioinformatik am weitesten verbreiteten Formate überhaupt. Die erste Zeile beginnt mit einem <code>&gt;</code> (Größer-als)-Symbol, direkt gefolgt von einem Namen oder einem eindeutigen Sequenzbezeichner, optional gefolgt von einer Beschreibung der Sequenz. Die folgenden Zeilen enthalten die Sequenz (in der Regel mit 70 oder 80 Zeichen pro Zeile). Eine Datei kann mehrere Sequenzeinträge enthalten, aber jeder muss mit einer <code>&gt;</code>-Zeile beginnen. Die FASTA-Datei für die Homo sapiens Fibrillin 1 (\textit{FBN1}) messenger RNA beginnt zum Beispiel so</p>
+<p>FASTQ ist ein Dateiformat für den Austausch von Sequenzierungsdaten, das sowohl die Sequenz als auch eine entsprechende Bewertung der Basenqualität enthält.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup> Sein Name leitet sich vom ehrwürdigen FASTA-Format ab, einem textbasierten Format zur Darstellung von DNA- und Aminosäuresequenzen, das ursprünglich 1985 zusammen mit einem Softwarepaket für das Alignment von Nukleinsäuren und Proteinen veröffentlicht wurde <a href="https://pubmed.ncbi.nlm.nih.gov/2983426/">Lipman et al. 1985</a>. Das FASTA-Format ist eines der in der Bioinformatik am weitesten verbreiteten Formate überhaupt. Die erste Zeile beginnt mit einem <code>&gt;</code> (Größer-als)-Symbol, direkt gefolgt von einem Namen oder einem eindeutigen Sequenzbezeichner, optional gefolgt von einer Beschreibung der Sequenz. Die folgenden Zeilen enthalten die Sequenz (in der Regel mit 70 oder 80 Zeichen pro Zeile). Eine Datei kann mehrere Sequenzeinträge enthalten, aber jeder muss mit einer <code>&gt;</code>-Zeile beginnen. Die FASTA-Datei für die Homo sapiens Fibrillin 1 (\textit{FBN1}) messenger RNA beginnt zum Beispiel so</p>
 <pre>
 >NM_000138.4 Homo sapiens fibrillin 1 (FBN1), mRNA
 AGTATTTCTCTCGCGAGAAACCGCTGCGCGGACGATACTTGAAGAGGTGGGGAAAGGAGGGGGCTGCGGG
@@ -836,10 +839,11 @@ GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTCAACTCACAGTTT
   </figcaption>
 </figure>
 <p>Die  <code>@</code>-Zeile umfasst ein freies Formatfeld, das in erster Linie für den Titel oder die Kennung der gemeldeten Sequenz verwendet wird. Illumina hat eine typische Namenskonvention für die Titelzeile, die wir weiter unten erläutern werden. Die zweite Zeile enthält die aufgerufenen Basen, d. h. die Sequenz des Read. Es folgt die <code>+</code>-Zeile Obwohl frühe Versionen des FASTQ-Formats in dieser Zeile eine Wiederholung der Titelzeile enthielten, ist es inzwischen Standard, dass die Zeile nur das Pluszeichen (<code>+</code>) enthält, was die Dateigröße erheblich reduziert. Die vierte Zeile schließlich enthält die ASCII-kodierten Phred-Qualitätsbewertungen und muss die gleiche Länge wie die Sequenzzeile haben. Somit wird für jede der in der zweiten Zeile angegebenen Basen eine Qualitätsbewertung in der entsprechenden Position der vierten Zeile angegeben.  In einigen früheren Versionen von FASTQ wurden verschiedene Schemata für die Kodierung von Qualitätswerten verwendet, aber die Gemeinschaft hat sich auf das Format Sanger/Illumina 1.8+ (Phred+33) geeinigt, das hier beschrieben wird.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Texte von diesem und dem folgenden Kapitel wurden den entsprechenden Kapiteln in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="phred-score"><a class="header" href="#phred-score">Phred-Score</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Texte von diesem und dem folgenden Kapitel wurden den entsprechenden Kapiteln in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="phred-score"><a class="header" href="#phred-score">Phred-Score</a></h1>
 <p>Der Phred-Score (d.h., Punktzahl) ist definiert als</p>
 <p>\[
 Q = -10 \log_{10}
@@ -1248,12 +1252,13 @@ What does the quality character \verb+&gt;+ mean? What is the associated error p
     <li>Ausgewählte SAM/BAM-Analysen in idiomatischem Rust programmieren.</li>
     </ol>
 </div>
-<p>Das SAM-Format (Sequence Alignment/Map) ist ein tabulatorgetrenntes Textformat, das ein universelles Format für die Speicherung von Alignments von NGS-Reads zu einem Referenzgenom sein soll.<sup class="footnote-reference"><a href="#note">1</a></sup> BAM (Binary Alignment/Map) ist die komprimierte (binäre) Version von SAM. Das SAM/BAM-Format kann Alignments von allen wichtigen Alignern wie <a href="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a> oder <a href="https://github.com/lh3/bwa">BWA</a> speichern, unterstützt die Indexierung für eine schnelle Suche und Betrachtung mit dem IGV und wird von Software zur Variantenerkennung weitgehend unterstützt.</p>
+<p>Das SAM-Format (Sequence Alignment/Map) ist ein tabulatorgetrenntes Textformat, das ein universelles Format für die Speicherung von Alignments von NGS-Reads zu einem Referenzgenom sein soll.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup> BAM (Binary Alignment/Map) ist die komprimierte (binäre) Version von SAM. Das SAM/BAM-Format kann Alignments von allen wichtigen Alignern wie <a href="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a> oder <a href="https://github.com/lh3/bwa">BWA</a> speichern, unterstützt die Indexierung für eine schnelle Suche und Betrachtung mit dem IGV und wird von Software zur Variantenerkennung weitgehend unterstützt.</p>
 <p>Es gibt eine umfangreiche Online-Dokumentation des Formats, und wir werden hier nicht versuchen, alle Details zu behandeln. Stattdessen werden wir die verschiedenen Komponenten des Formats anhand von kleinen Beispielen intuitiv erklären. Darüber hinaus zeigen wir, wie man die Eigenschaften der durch SAM/BAM-Dateien dargestellten Alignments analysiert. Zu diesem Zweck werden wir hauptsächlich <a href="https://www.htslib.org/">SAMtools</a> verwenden.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Texte von diesem Kapitel wurden dem  Kapitel SAM/BAM Format von Peter Robinson and Peter Hansen} in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="sam-grundlagen"><a class="header" href="#sam-grundlagen">SAM-Grundlagen</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Texte von diesem Kapitel wurden dem  Kapitel SAM/BAM Format von Peter Robinson and Peter Hansen} in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="sam-grundlagen"><a class="header" href="#sam-grundlagen">SAM-Grundlagen</a></h1>
 <div class="emphasis-box">
    <p>Wir werden das grundlegende SAM-Format anhand eines Beispiels erläutern, bei dem fünf Reads der Länge 10 auf eine Referenzsequenz der Länge 40 abgebildet werden (Abbildung 1).</p>
    <p>Lesen Sie die Ausführungen zum SAM-Format und bearbeiten Sie die Übung am Ende der Seite.</p>
@@ -1352,7 +1357,7 @@ Das SAM-Format verwendet das Wort
 Teilsequenz zu beziehen; zum Beispiel können die beiden Reads eines
 Lesepaares als zwei Segmente bezeichnet werden.</p>
 <p>Das Feld <code>QNAME</code> speichert den Namen der Abfrage-(query)-Sequenz,
-in der Regel ein Read.<sup class="footnote-reference"><a href="#note">1</a></sup>
+in der Regel ein Read.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup>
 POS gibt die Position auf dem Chromosom an, an der der Read
 ausgerichtet wurde. Das Feld <code>FLAG</code> wird weiter unten erklärt.</p>
 <p>Das Feld <code>MAPQ</code> stellt die
@@ -1367,11 +1372,6 @@ Reads <code>RNEXT</code> auf ``*'' (für <i>not-applicable</i>)  gesetzt.
 <code>PNEXT</code> und  <code>TLEN</code> werden auf 0 gesetzt. Schließlich enthält
 das Feld <code>SEQ</code> die Nukleotidsequenz des Reads und das Feld <code>QUAL</code>
 zeigt die Basenqualitätswerte für jede Position an.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Segmente mit demselben <code>QNAME</code> stammen von der gleichen Vorlage,
-d. h. Reads eines Read-Paares haben normalerweise den gleichen
-<code>QNAME</code>.</p>
-</div>
 <h2 id="paired-end-sequenzen"><a class="header" href="#paired-end-sequenzen">Paired-End-Sequenzen</a></h2>
 <p>In Abbildung 2 werden zwei Paare
 bestehend aus vier Reads der Länge 10 werden auf eine Referenzsequenz der Länge 40 abgebildet. Beachten Sie, dass
@@ -1390,7 +1390,13 @@ einem Minuszeichen dargestellt.</p>
 SAM-Datei (Minimalbeispiel, Paired-End-Sequenzen). Oben: Alignment. Unten: Entsprechende SAM-Datei.</figcaption>
 </figure>
 <p>Für Paired-End-Reads werden andere bitweise Flags verwendet als für Single-End-Reads. Die Flags <code>99</code> und <code>147</code> zeigen an, dass beide Mitglieder des Paares korrekt auf den Vorwärts- und den Rückwärtsstrang gemappt wurden.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="cigar"><a class="header" href="#cigar">CIGAR</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Segmente mit demselben <code>QNAME</code> stammen von der gleichen Vorlage,
+d. h. Reads eines Read-Paares haben normalerweise den gleichen
+<code>QNAME</code>. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="cigar"><a class="header" href="#cigar">CIGAR</a></h1>
 <p>Eine CIGAR (Concise Idiosyncratic Gapped Alignment Report) String besteht aus einer Reihe von
 Operationslängen sowie den Operationen, die beschreiben, wie genau ein Read an die Referenzsequenz angeglichen wurde (Abbildung 1).</p>
 <figure>
@@ -1484,7 +1490,7 @@ GCATACTGTTG
 <p>Mit soft-clipping, das in der CIGAR-Zeichenkette mit einem <code>&gt;S</code> angezeigt wird, werden die abgeschnittenen Sequenzbasen nicht aus der SEQ-Zeichenkette entfernt, aber nicht von Varianten-Callern verwendet und nicht in Viewern wie IGV (<a href="https://igv.org/">Integrativer Genomik-Viewer</a>)angezeigt.</p>
 <p>Das Hard-Clipping (H) ähnelt dem Soft-Clipping (S), unterscheidet sich aber dadurch,
 dass die hart geclippte Teilsequenz nicht im Alignment-Datensatz enthalten ist
-(Abbildung 1).<sup class="footnote-reference"><a href="#note">1</a></sup></p>
+(Abbildung 1).<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup></p>
 <figure>
 <img src="img/SoftClip.png" alt="soft clipping" width="500">
  <figcaption><strong>Figure 1</strong>
@@ -1497,14 +1503,15 @@ Read1:    CCTAGGAACAGCACAATTTCTAGATACAATCAT
 Read2:     ggtcacatgattgtATTTCTAGATACAATCAT
 </pre>
 <p>Das entsprechende Alignment von Read1 und Read2 mit Ref. Die soft-clipped (nicht ausrichtbaren) Basen von Read2 sind in Kleinbuchstaben dargestellt.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>BWA verwendet das Soft-Clipping für das primäre Alignment, damit die ursprünglichen Rohdaten bei Bedarf aus der BAM-Datei regeneriert werden können. Für die sekundären Alignments ist dies nicht notwendig, daher verwendet BWA Hard Clipping, um Speicherplatz zu sparen.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mapping-qualität"><a class="header" href="#mapping-qualität">Mapping-Qualität</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>BWA verwendet das Soft-Clipping für das primäre Alignment, damit die ursprünglichen Rohdaten bei Bedarf aus der BAM-Datei regeneriert werden können. Für die sekundären Alignments ist dies nicht notwendig, daher verwendet BWA Hard Clipping, um Speicherplatz zu sparen. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="mapping-qualität"><a class="header" href="#mapping-qualität">Mapping-Qualität</a></h1>
 <p>Das fünfte Feld einer SAM-Datei gibt die Mapping-Qualität des Read an. Der MAPQ-Wert (MAPping Quality) spiegelt die Wahrscheinlichkeit wider, dass
 der Read an der falschen Position im Genom ausgerichtet ist. Wie der Wert für die Basenqualität handelt es sich dabei um eine Phred-skalierte posteriore Wahrscheinlichkeit, dass die vom Aligner angegebene Mapping-Position falsch ist</p>
 <p>\[
-MAPQ = -10\log_{10} P(\mathrm{mapping position wrong)
+MAPQ = -10\log_{10} P(\text{mapping position wrong})
 \]</p>
 <p>Die MAPQ wird auf die nächste ganze Zahl gerundet. Beispielsweise würde einer von tausend Reads mit einem MAPQ von 30 als falsch ausgerichtet vorhergesagt.  Ein MAPQ-Wert von 255 bedeutet, dass die Zuordnungsqualität nicht verfügbar ist.</p>
 <p>Eine der größten Herausforderungen für Read-Alignment-Algorithmen ist das
@@ -1613,7 +1620,7 @@ und wenn Sie Programme wie SAMtools verwenden, um damit zu arbeiten, ist es hilf
 zwischen diesen drei Zahlendarstellungen.</p>
 <p>Ein Wert von 99 zeigt zum Beispiel folgende Ergebnisse an:</p>
 <ul>
-<li>der Read mehrere Segmente in der Sequenzierung hat,<sup class="footnote-reference"><a href="#note0">1</a></sup> d.h.,  0x1= \(1\times 16^0=1\)</li>
+<li>der Read mehrere Segmente in der Sequenzierung hat,<sup class="footnote-reference" id="fr-note0-1"><a href="#footnote-note0">1</a></sup> d.h.,  0x1= \(1\times 16^0=1\)</li>
 <li>jedes Segment des Reads konnte richtig gemappt werden (korrektes Mapping beider Reads des Read-Paares), d.h.,  0x2=\(2 \times 16^0=2\)</li>
 <li>der Mate-Read auf den Rückwärtsstrang gemappt ist, d.h., 0x20=\(2\times16^1=32|))</li>
 <li>der Read, auf den im aktuellen SAM-Datensatz Bezug genommen wird, ist das erste Segment im Tempalte  (der erste Read im  dem Paar, d.h.,  0x40=\(4\times 16^1=64\))</li>
@@ -1637,23 +1644,24 @@ FLAG & 0x900 == 0
 AND   1100       
      =1000      
 </pre>
-<p>Wenn also ein Read entweder als  sekundäres Alignment<sup class="footnote-reference"><a href="#note">2</a></sup>
+<p>Wenn also ein Read entweder als  sekundäres Alignment<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">2</a></sup>
 oder ein \index{supplementary alignment} supplementary alignment,\footnote{Nach der SAM-Spezifikation ist ein chimäres Alignment ein Alignment eines Reads, das nicht als lineares Alignment dargestellt werden kann. In der Regel bedeutet dies, dass ein Read aus mehreren Segmenten besteht, die sich an verschiedenen Teilen des Genoms ausrichten. Die Segmente haben keine großen Überlappungen. Eines der Segmente wird als das repräsentative Alignment betrachtet, die anderen werden als ergänzend bezeichnet und haben das Flag für ergänzendes Alignment gesetzt.
-dann erhalten wir <code>FLAG &amp; 0x900 != 0</code>.<sup class="footnote-reference"><a href="#note2">3</a></sup> Das SAM-Format besagt, dass eine beliebige Anzahl von Zeilen sekundäre oder ergänzende Ausrichtungen darstellen kann, aber dass nur eine Zeile die primäre (repräsentative) Ausrichtung sein kann.</p>
-<div class="footnote-definition" id="note0"><sup class="footnote-definition-label">1</sup>
-<p>normalerweise bezieht sich dies auf einen Paired-End- oder Mate-Pair-Read</p>
-</div>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">2</sup>
-<p>Wenn ein Read aufgrund von repetitiven Sequenzen oder aus anderen Gründen auf mehrere Stellen abgebildet wird, wird eine dieser Ausrichtungen als primär markiert, und bei allen anderen wird das Bitflag für sekundäres Alignment gesetzt.</p>
-</div>
-<div class="footnote-definition" id="note2"><sup class="footnote-definition-label">3</sup>
-<p>Das Ergebnis könnte 0x100, 0x800 oder 0x900 sein.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="samtools"><a class="header" href="#samtools">samtools</a></h1>
+dann erhalten wir <code>FLAG &amp; 0x900 != 0</code>.<sup class="footnote-reference" id="fr-note2-1"><a href="#footnote-note2">3</a></sup> Das SAM-Format besagt, dass eine beliebige Anzahl von Zeilen sekundäre oder ergänzende Ausrichtungen darstellen kann, aber dass nur eine Zeile die primäre (repräsentative) Ausrichtung sein kann.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note0">
+<p>normalerweise bezieht sich dies auf einen Paired-End- oder Mate-Pair-Read <a href="#fr-note0-1">↩</a></p>
+</li>
+<li id="footnote-note">
+<p>Wenn ein Read aufgrund von repetitiven Sequenzen oder aus anderen Gründen auf mehrere Stellen abgebildet wird, wird eine dieser Ausrichtungen als primär markiert, und bei allen anderen wird das Bitflag für sekundäres Alignment gesetzt. <a href="#fr-note-1">↩</a></p>
+</li>
+<li id="footnote-note2">
+<p>Das Ergebnis könnte 0x100, 0x800 oder 0x900 sein. <a href="#fr-note2-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="samtools"><a class="header" href="#samtools">samtools</a></h1>
 <p>SAMtools kann Alignments filtern, um nur die alignierten Reads auszugeben, die
 bestimmten Kriterien entsprechen, einschließlich der Überlappung mit Regionen, die in einer BED-Datei (<code>-L</code>) angegeben sind,
 Zugehörigkeit zu bestimmten Lesegruppen (<code>-r</code>, <code>-R</code>), Herkunft aus einer bestimmten Bibliothek oder
-eine bestimmte Mindestanzahl von CIGAR-Basen haben, die die Abfragesequenz verbrauchen.<sup class="footnote-reference"><a href="#note">1</a></sup></p>
+eine bestimmte Mindestanzahl von CIGAR-Basen haben, die die Abfragesequenz verbrauchen.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup></p>
 <p>Die Option <code>-f <INT></code> gibt nur Alignments aus, bei denen alle Bits in <code>INT</code>
 im Feld <code>FLAG</code> gesetzt sind (<code>INT</code> kann als Dezimalzahl oder als
 hexadezimale Zahl angegeben werden, die mit '0x' beginnt). Dies führt eine UND-Verknüpfung mit allen Bits durch, die
@@ -1665,11 +1673,6 @@ folgenden Befehl verwenden.</p>
 <pre>
 $ samtools view -F 0x900 NIST7035_aln.bam
 </pre>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Die
-<code>M</code>/<code>D</code>/<code>N</code>/<code>=</code>/<code>X</code>-Operatoren "verbrauchen" Referenzbasen (they are said to "consume reference
-bases.")</p>
-</div>
 <p>Die mit diesem Befehl ausgegebenen Reads enthielten insgesamt 38 verschiedene Werte für das Bitfeld, von denen keiner die Bits 0x100 oder 0x800 enthielt. Mit dem folgenden Befehl werden alle sekundären Alignment-Reads extrahiert.</p>
 <pre>
 $ samtools view -f 0x100 NIST7035_aln.bam
@@ -1690,7 +1693,13 @@ $ samtools flagstat NIST7035_aln37.bam
 19085 + 0 with mate mapped to a different chr
 9718 + 0 with mate mapped to a different chr (mapQ>=5)
 </pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="sam-tags-optionale-felder"><a class="header" href="#sam-tags-optionale-felder">SAM-TAGs: Optionale Felder</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Die
+<code>M</code>/<code>D</code>/<code>N</code>/<code>=</code>/<code>X</code>-Operatoren "verbrauchen" Referenzbasen (they are said to "consume reference
+bases.") <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="sam-tags-optionale-felder"><a class="header" href="#sam-tags-optionale-felder">SAM-TAGs: Optionale Felder</a></h1>
 <p>Auf die 11 Pflichtfelder können beliebig viele optionale Felder folgen. Alle optionalen Felder folgen dem
 <code>TAG:TYPE:VALUE</code>-Format, wobei <code>TAG</code> eine zweistellige Zeichenfolge, <code>TYPE</code> einer von sechs Datentypen (Tabelle 1) und <code>VALUE</code> der tatsächliche Wert ist.</p>
 <table>
@@ -1729,10 +1738,7 @@ $ samtools flagstat NIST7035_aln37.bam
   </tbody>
 </table>
 <p>Verschiedene Aligner verwenden unterschiedliche optionale Felder. Leser finden eine vollständige Dokumentation allgemeiner Felder bei SAMtools
-Website<sup class="footnote-reference"><a href="#note">1</a></sup> und Aligner wie BWA stellen ebenfalls Dokumentation zu den von ihnen verwendeten Feldern bereit. Hier stellen wir einige ausgewählte Bereiche vor, um den Lesern einen Eindruck davon zu vermitteln, wie diese Bereiche in der Praxis eingesetzt werden.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p><a href="https://samtools.github.io/hts-specs/SAMtags.pdf">SAMtags</a>.</p>
-</div>
+Website<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup> und Aligner wie BWA stellen ebenfalls Dokumentation zu den von ihnen verwendeten Feldern bereit. Hier stellen wir einige ausgewählte Bereiche vor, um den Lesern einen Eindruck davon zu vermitteln, wie diese Bereiche in der Praxis eingesetzt werden.</p>
 <h3 id="das-nm-feld"><a class="header" href="#das-nm-feld">Das NM-Feld</a></h3>
 <p>Das vordefinierte <code>NM</code>-Tag nimmt einen ganzzahligen Wert (<code>i</code>) an.
 Das Feld <code>NM</code> gibt den Bearbeitungsabstand zur Referenz an, einschließlich Mehrdeutigkeit
@@ -1810,7 +1816,7 @@ Sequenzübereinstimmungen aufweisen. Der Read hat insgesamt 101 Basen, aber nur 
 <p>Dies würde die CIGAR 12M (zwölf ausgerichtete Positionen ohne) ergeben
 Einfügungen oder Löschungen) und die <code>MD</code>-Zeichenfolge <code>MD:Z:1A0C3T0C4</code>, was darauf hinweist, dass es zwischen den nicht übereinstimmenden A und C und T und C keine (0) passenden Basen gibt. Falls es sich bei der ersten oder letzten Base um eine Sequenzfehlanpassung handelt, wird dieser ebenfalls eine 0 vorangestellt oder folgt (z. B. <code>MD:Z:0A100</code> oder <code>MD:Z:100A0</code>).</p>
 <h3 id="das-rg-feld"><a class="header" href="#das-rg-feld">Das RG-Feld</a></h3>
-<p>Das <code>RG</code>-Feld gibt die Lesegruppe des Lesevorgangs an, z. B. \verb+RG:Z:rg1+. .</p>
+<p>Das <code>RG</code>-Feld gibt die Lesegruppe des Lesevorgangs an, z. B. <code>RG:Z:rg1</code>.</p>
 <h3 id="das-as-feld"><a class="header" href="#das-as-feld">Das AS-Feld</a></h3>
 <p>Das Feld <code>AS</code> gibt den vom Aligner generierten Alignment-Score an. Beispielsweise gibt \verb+AS:i:84+ an, dass BWA-MEM dem Lesevorgang einen Alignment-Score von 84 zugewiesen hat.</p>
 <h3 id="für-endbenutzer-reservierte-felder"><a class="header" href="#für-endbenutzer-reservierte-felder">Für Endbenutzer reservierte Felder</a></h3>
@@ -1821,7 +1827,11 @@ XA:Z:chr1,+13074589,101M,3;chr1,-13152100,101M,3;chr1, \
 chr1_KI270766v1_alt,-97694,98M3S,3;	
 </pre>
 <p>Dieses Tag zeigt, dass der Lesevorgang auch alternativen Orten zugeordnet werden könnte. Der erste alternative Treffer befand sich auf Chromosom 1 an Position 13.074.589, er war ohne Indels ausgerichtet (CIGAR <code>101M</code>) und die Bearbeitungsentfernung (<code>NM</code>) betrug drei. Eine negative Position zeigt an, dass die alternative Ausrichtung auf dem umgekehrten Strang liegt.  Zu den weiteren optionalen Tags von BWA gehört <code>XS</code>, das den suboptimalen Alignment-Score anzeigt.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="Übungen-1"><a class="header" href="#Übungen-1">Übungen</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p><a href="https://samtools.github.io/hts-specs/SAMtags.pdf">SAMtags</a>. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="Übungen-1"><a class="header" href="#Übungen-1">Übungen</a></h1>
 <p>Lassen Sie uns mit den oben genannten Kenntnissen einige Übungen durchführen
 vertiefen unsere Kenntnisse des BAM-Formats.</p>
 <h3 id="Übungen-1"><a class="header" href="#Übungen-1">Übungen 1</a></h3>
@@ -1867,7 +1877,6 @@ fn align_by_cigar<T: Into<String>, U: Into<String>, V: Into<String>>(
 <p>Bestimmen Sie <code>NM</code> für den CIGAR-String <code>50M</code> und den <code>MD</code>-Eintrag von <code>MD:Z:4A45</code>.</p>
 <p>Bestimmen Sie <code>NM</code> für den CIGAR-String <code>6M1D23M</code> und den <code>MD</code>-Eintrag von <code>MD:Z:1T4^T1C21</code>.</p>
 <p>Schreiben und testen Sie eine entsprechende Rustfunktion.</p>
-<p>{\it See hints and answers on page~\pageref{page:SAMBAMhints}.}</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="erklärungen"><a class="header" href="#erklärungen">Erklärungen</a></h1>
 <p>Erklärungen zu den Übungen auf der vorherigen Seite.</p>
 <h1 id="Übung-2-erklärung"><a class="header" href="#Übung-2-erklärung">Übung 2: Erklärung</a></h1>

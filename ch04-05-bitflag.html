@@ -36,10 +36,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -49,8 +50,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -64,7 +65,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -77,8 +79,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -114,6 +116,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -239,7 +242,7 @@ und wenn Sie Programme wie SAMtools verwenden, um damit zu arbeiten, ist es hilf
 zwischen diesen drei Zahlendarstellungen.</p>
 <p>Ein Wert von 99 zeigt zum Beispiel folgende Ergebnisse an:</p>
 <ul>
-<li>der Read mehrere Segmente in der Sequenzierung hat,<sup class="footnote-reference"><a href="#note0">1</a></sup> d.h.,  0x1= \(1\times 16^0=1\)</li>
+<li>der Read mehrere Segmente in der Sequenzierung hat,<sup class="footnote-reference" id="fr-note0-1"><a href="#footnote-note0">1</a></sup> d.h.,  0x1= \(1\times 16^0=1\)</li>
 <li>jedes Segment des Reads konnte richtig gemappt werden (korrektes Mapping beider Reads des Read-Paares), d.h.,  0x2=\(2 \times 16^0=2\)</li>
 <li>der Mate-Read auf den Rückwärtsstrang gemappt ist, d.h., 0x20=\(2\times16^1=32|))</li>
 <li>der Read, auf den im aktuellen SAM-Datensatz Bezug genommen wird, ist das erste Segment im Tempalte  (der erste Read im  dem Paar, d.h.,  0x40=\(4\times 16^1=64\))</li>
@@ -263,19 +266,20 @@ FLAG & 0x900 == 0
 AND   1100       
      =1000      
 </pre>
-<p>Wenn also ein Read entweder als  sekundäres Alignment<sup class="footnote-reference"><a href="#note">2</a></sup>
+<p>Wenn also ein Read entweder als  sekundäres Alignment<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">2</a></sup>
 oder ein \index{supplementary alignment} supplementary alignment,\footnote{Nach der SAM-Spezifikation ist ein chimäres Alignment ein Alignment eines Reads, das nicht als lineares Alignment dargestellt werden kann. In der Regel bedeutet dies, dass ein Read aus mehreren Segmenten besteht, die sich an verschiedenen Teilen des Genoms ausrichten. Die Segmente haben keine großen Überlappungen. Eines der Segmente wird als das repräsentative Alignment betrachtet, die anderen werden als ergänzend bezeichnet und haben das Flag für ergänzendes Alignment gesetzt.
-dann erhalten wir <code>FLAG &amp; 0x900 != 0</code>.<sup class="footnote-reference"><a href="#note2">3</a></sup> Das SAM-Format besagt, dass eine beliebige Anzahl von Zeilen sekundäre oder ergänzende Ausrichtungen darstellen kann, aber dass nur eine Zeile die primäre (repräsentative) Ausrichtung sein kann.</p>
-<div class="footnote-definition" id="note0"><sup class="footnote-definition-label">1</sup>
-<p>normalerweise bezieht sich dies auf einen Paired-End- oder Mate-Pair-Read</p>
-</div>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">2</sup>
-<p>Wenn ein Read aufgrund von repetitiven Sequenzen oder aus anderen Gründen auf mehrere Stellen abgebildet wird, wird eine dieser Ausrichtungen als primär markiert, und bei allen anderen wird das Bitflag für sekundäres Alignment gesetzt.</p>
-</div>
-<div class="footnote-definition" id="note2"><sup class="footnote-definition-label">3</sup>
-<p>Das Ergebnis könnte 0x100, 0x800 oder 0x900 sein.</p>
-</div>
-
+dann erhalten wir <code>FLAG &amp; 0x900 != 0</code>.<sup class="footnote-reference" id="fr-note2-1"><a href="#footnote-note2">3</a></sup> Das SAM-Format besagt, dass eine beliebige Anzahl von Zeilen sekundäre oder ergänzende Ausrichtungen darstellen kann, aber dass nur eine Zeile die primäre (repräsentative) Ausrichtung sein kann.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note0">
+<p>normalerweise bezieht sich dies auf einen Paired-End- oder Mate-Pair-Read <a href="#fr-note0-1">↩</a></p>
+</li>
+<li id="footnote-note">
+<p>Wenn ein Read aufgrund von repetitiven Sequenzen oder aus anderen Gründen auf mehrere Stellen abgebildet wird, wird eine dieser Ausrichtungen als primär markiert, und bei allen anderen wird das Bitflag für sekundäres Alignment gesetzt. <a href="#fr-note-1">↩</a></p>
+</li>
+<li id="footnote-note2">
+<p>Das Ergebnis könnte 0x100, 0x800 oder 0x900 sein. <a href="#fr-note2-1">↩</a></p>
+</li>
+</ol>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

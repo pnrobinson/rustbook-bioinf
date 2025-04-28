@@ -36,10 +36,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -49,8 +50,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -64,7 +65,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -77,8 +79,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -114,6 +116,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -155,12 +158,13 @@
     <li>Ausgewählte SAM/BAM-Analysen in idiomatischem Rust programmieren.</li>
     </ol>
 </div>
-<p>Das SAM-Format (Sequence Alignment/Map) ist ein tabulatorgetrenntes Textformat, das ein universelles Format für die Speicherung von Alignments von NGS-Reads zu einem Referenzgenom sein soll.<sup class="footnote-reference"><a href="#note">1</a></sup> BAM (Binary Alignment/Map) ist die komprimierte (binäre) Version von SAM. Das SAM/BAM-Format kann Alignments von allen wichtigen Alignern wie <a href="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a> oder <a href="https://github.com/lh3/bwa">BWA</a> speichern, unterstützt die Indexierung für eine schnelle Suche und Betrachtung mit dem IGV und wird von Software zur Variantenerkennung weitgehend unterstützt.</p>
+<p>Das SAM-Format (Sequence Alignment/Map) ist ein tabulatorgetrenntes Textformat, das ein universelles Format für die Speicherung von Alignments von NGS-Reads zu einem Referenzgenom sein soll.<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup> BAM (Binary Alignment/Map) ist die komprimierte (binäre) Version von SAM. Das SAM/BAM-Format kann Alignments von allen wichtigen Alignern wie <a href="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a> oder <a href="https://github.com/lh3/bwa">BWA</a> speichern, unterstützt die Indexierung für eine schnelle Suche und Betrachtung mit dem IGV und wird von Software zur Variantenerkennung weitgehend unterstützt.</p>
 <p>Es gibt eine umfangreiche Online-Dokumentation des Formats, und wir werden hier nicht versuchen, alle Details zu behandeln. Stattdessen werden wir die verschiedenen Komponenten des Formats anhand von kleinen Beispielen intuitiv erklären. Darüber hinaus zeigen wir, wie man die Eigenschaften der durch SAM/BAM-Dateien dargestellten Alignments analysiert. Zu diesem Zweck werden wir hauptsächlich <a href="https://www.htslib.org/">SAMtools</a> verwenden.</p>
-<div class="footnote-definition" id="note"><sup class="footnote-definition-label">1</sup>
-<p>Texte von diesem Kapitel wurden dem  Kapitel SAM/BAM Format von Peter Robinson and Peter Hansen} in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst.</p>
-</div>
-
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>Texte von diesem Kapitel wurden dem  Kapitel SAM/BAM Format von Peter Robinson and Peter Hansen} in <a href="https://www.amazon.com/Computational-Exome-Genome-Analysis-Robinson/dp/0367657740">Computational Exome and Genome Analysis</a> entnommen und leicht angepasst. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
