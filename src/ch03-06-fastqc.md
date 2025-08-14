@@ -1,4 +1,4 @@
-# FasQC in Rust
+# FastQC in Rust
 
 <div class="emphasis-box">
     In diesem Abschnitt wollen wir üben, wie man eine Rustapplikation konzipiert und die Software-Architektur entwirft (Stukturen, Traits, Module, usw.). Praktikumsteilnehmer sollen
