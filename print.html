@@ -47,6 +47,16 @@
         <script src="toc.js"></script>
     </head>
     <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
     <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
@@ -87,10 +97,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -1218,7 +1231,7 @@ Wir lassen jedes Mall alle Tests laufen. Das volle Konzept der TDD umfasst viele
 What does the quality character \verb+&gt;+ mean? What is the associated error probability?</p>
 <h2 id="Übung-4"><a class="header" href="#Übung-4">Übung 4</a></h2>
 <p>Stellen wir uns einen Read zu 1000bb vor, bei dem alle Basen einen Phred-Score von <code>&amp;</code> aufweisen. Berechen Sie die erwartete Anzahl von Fehlern für den Read (unter der Unabhängigkeitsannehma).</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="fasqc-in-rust"><a class="header" href="#fasqc-in-rust">FasQC in Rust</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fastqc-in-rust"><a class="header" href="#fastqc-in-rust">FastQC in Rust</a></h1>
 <div class="emphasis-box">
     In diesem Abschnitt wollen wir üben, wie man eine Rustapplikation konzipiert und die Software-Architektur entwirft (Stukturen, Traits, Module, usw.). Praktikumsteilnehmer sollen
     sich erstmal jeder für sich eine Applikation <emph>entwerfen</emph>. Wir werden die Entwürfe zusammen besprechen und Teilnehmer sollen ihre entwürfe entsprechend ggf. korrigieren. Die Programmierarbeit soll in Kleingruppen wie oben beschrieben geleistet werden. 
@@ -1952,6 +1965,7 @@ Am besten sollen die Teilnehmer Funktionen von samtools view implementieren, hie
             });
         });
         </script>
+
 
     </div>
     </body>
